@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PyTwitter Pro 🐦</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f5f8fa; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .tweet-box { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tweet { background: white; border: 1px solid #e1e8ed; padding: 15px; margin-top: 10px; border-radius: 10px; display: flex; align-items: start; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; object-fit: cover; }
+        .content { width: 100%; }
+        .meta { color: gray; font-size: 0.8em; }
+        .delete-btn { color: red; text-decoration: none; font-weight: bold; float: right; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Hola, {{ current_user.username }} 👋</h1>
+        <a href="/logout" style="color: red;">Cerrar Sesión</a>
+    </div>
+
+    <div class="tweet-box">
+        <form action="/tweet" method="POST">
+            <textarea name="texto" rows="3" style="width: 95%;" placeholder="¿Qué estás pensando?" required></textarea>
+            <br>
+            <button type="submit" style="background: #1da1f2; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer;">Twittear</button>
+        </form>
+    </div>
+
+    {% for tweet in tweets %}
+        <div class="tweet">
+            <img src="{{ url_for('static', filename='uploads/' + tweet.profile_pic) }}" class="avatar">
+            
+            <div class="content">
+                <strong>@{{ tweet.username }}</strong>
+                <span class="meta">{{ tweet.fecha }}</span>
+                
+                {% if tweet.user_id == current_user.id %}
+                    <a href="/delete/{{ tweet.id }}" class="delete-btn">x</a>
+                {% endif %}
+
+                <p>{{ tweet.texto }}</p>
+            </div>
+        </div>
+    {% endfor %}
+
+</body>
+</html>
